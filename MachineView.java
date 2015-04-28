@@ -72,7 +72,7 @@ public class MachineView extends Observable {
     }
 
     public void step() {
-        this.model.step();
+	this.model.step();
     }
 
     public void toggleAutoStep() {
