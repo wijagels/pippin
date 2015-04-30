@@ -247,5 +247,33 @@ public class MachineModel extends Observable{
         INSTRUCTION_MAP.put(0xF,(arg,level) -> {
             halt();
         });
+
+	//INSTRUCTION_MAP entry for "ROT"
+	INSTRUCTION_MAP.put(0x14,(arg, level) -> {
+		int start = arg;
+		int length = arg + 1;
+		int move = arg + 2;
+		if (start<0 || length<0 || start+length-1 >= Memory.DATA_SIZE){
+			throw new IllegalArgumentException("Illegal Argument(s) for 'ROT' instruction.");
+		}
+		if ( start <= arg + 2 || start + length -1 <= arg){
+			throw new IllegalArgumentException("Illegal Argument(s) for 'ROT' instruction.");
+		}
+		if (move<0){
+			cpu.accumulator = getData(start);
+			for (int k=0; k<length+move; k++){
+				setData(start+length+move-k, getData(start+(k + move + length)%length));
+			}
+			setData(start+length+move, cpu.accumulator);
+		}else if (move>0){
+			cpu.accumulator = getData(start+length-1);
+			for (int k = length -1; k>0; k--){
+				setData(start+length+move-k, getData(start+(k + move + length)%length));
+			}
+			setData(start, cpu.accumulator);
+		}else{
+			//do nothing
+		}
+	});
     }
 }

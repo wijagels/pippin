@@ -826,4 +826,17 @@ public class InstructionTester {
             Instruction instr = machine.get(0X8);
             instr.execute(0, 2);
         }
+	//NEEDS JAVADOC
+	@Test (expected=IllegalArgumentException.class)
+		public void testROTiae(){
+			Instruction instr = machine.get(0x14);
+			instr.execute(1,0);
+		}
+
+	//NEEDS JAVADOC
+	@Test
+	public void testROT(){
+		Instruction instr = machine.get(0x14);
+		instr.execute(1,1);
+	}	
 }
