@@ -6,6 +6,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 public class InstructionTester {
 
     MachineModel machine = new MachineModel();
@@ -826,17 +828,26 @@ public class InstructionTester {
             Instruction instr = machine.get(0X8);
             instr.execute(0, 2);
         }
-	//NEEDS JAVADOC
-	@Test (expected=IllegalArgumentException.class)
-		public void testROTiae(){
-			Instruction instr = machine.get(0x14);
-			instr.execute(1,0);
-		}
+    //NEEDS JAVADOC
+    @Test (expected=IllegalArgumentException.class)
+        public void testROTiae(){
+            Instruction instr = machine.get(0x14);
+            instr.execute(1,0);
+        }
 
-	//NEEDS JAVADOC
-	@Test
-	public void testROT(){
-		Instruction instr = machine.get(0x14);
-		instr.execute(1,1);
-	}	
+    //NEEDS JAVADOC
+    @Test
+    public void testROT(){
+        machine.clearMemory();
+        machine.setData(0x14, 0x20);
+        machine.setData(0x15, 3);
+        machine.setData(0x16, 4);
+        for(int i = 0x20; i < 0x20 + 2;i++) {
+            machine.setData(i, 21);
+        }
+        System.out.println(Arrays.toString(machine.getData()));
+        Instruction instr = machine.get(0x14);
+        instr.execute(0x14,1);
+        System.out.println(Arrays.toString(machine.getData()));
+    }
 }

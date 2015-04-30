@@ -3,6 +3,7 @@ package pippin;
 import java.util.Observable;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.Arrays;
 
 
 public class MachineModel extends Observable{
@@ -248,32 +249,34 @@ public class MachineModel extends Observable{
             halt();
         });
 
-	//INSTRUCTION_MAP entry for "ROT"
-	INSTRUCTION_MAP.put(0x14,(arg, level) -> {
-		int start = arg;
-		int length = arg + 1;
-		int move = arg + 2;
-		if (start<0 || length<0 || start+length-1 >= Memory.DATA_SIZE){
-			throw new IllegalArgumentException("Illegal Argument(s) for 'ROT' instruction.");
-		}
-		if ( start <= arg + 2 || start + length -1 <= arg){
-			throw new IllegalArgumentException("Illegal Argument(s) for 'ROT' instruction.");
-		}
-		if (move<0){
-			cpu.accumulator = getData(start);
-			for (int k=0; k<length+move; k++){
-				setData(start+length+move-k, getData(start+(k + move + length)%length));
-			}
-			setData(start+length+move, cpu.accumulator);
-		}else if (move>0){
-			cpu.accumulator = getData(start+length-1);
-			for (int k = length -1; k>0; k--){
-				setData(start+length+move-k, getData(start+(k + move + length)%length));
-			}
-			setData(start, cpu.accumulator);
-		}else{
-			//do nothing
-		}
-	});
+        //INSTRUCTION_MAP entry for "ROT"
+        INSTRUCTION_MAP.put(0x14,(arg, level) -> {
+            if(level != 1)
+                throw new IllegalArgumentException(
+                        "Illegal indirection level in ROT instruction");
+            int start = memory.getData(arg);
+            int length = memory.getData(arg + 1);
+            int move = memory.getData(arg + 2);
+            if (start<0 || length<0 || start+length-1 >= Memory.DATA_SIZE || start <= arg + 2 ||
+                    start + length -1 <= arg) {
+                throw new IllegalArgumentException(
+                        "Illegal Argument(s) for 'ROT' instruction.");
+                    }
+            if (move<0){
+                cpu.accumulator = getData(start);
+                for (int k=0; k<length+move; k++){
+                    setData(start+length+move-k, getData(start+(k + move + length)%length));
+                }
+                setData(start+length+move, cpu.accumulator);
+            }else if (move>0){
+                cpu.accumulator = getData(start+length-1);
+                for (int k = length -1; k>0; k--){
+                    setData(start+length+move-k, getData(start+(k + move + length)%length));
+                }
+                setData(start, cpu.accumulator);
+            }else{
+                //do nothing
+            }
+        });
     }
 }
