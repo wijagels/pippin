@@ -8,3 +8,6 @@ all:
 gui:
 	$(all)
 	java pippin.MachineView
+
+clean:
+	git clean -xdf
