@@ -252,30 +252,31 @@ public class MachineModel extends Observable{
         //INSTRUCTION_MAP entry for "ROT"
         INSTRUCTION_MAP.put(0x14,(arg, level) -> {
             if(level != 1)
-                throw new IllegalArgumentException(
-                        "Illegal indirection level in ROT instruction");
+                throw new IllegalArgumentException("Illegal indirection level in ROT instruction");
             int start = memory.getData(arg);
             int length = memory.getData(arg + 1);
             int move = memory.getData(arg + 2);
-            if (start<0 || length<0 || start+length-1 >= Memory.DATA_SIZE || start <= arg + 2 ||
-                    start + length -1 <= arg) {
-                throw new IllegalArgumentException(
-                        "Illegal Argument(s) for 'ROT' instruction.");
-                    }
-            if (move<0){
-                cpu.accumulator = getData(start);
-                for (int k=0; k<length+move; k++){
-                    setData(start+length+move-k, getData(start+(k + move + length)%length));
+            if(start<0 || length<0 || start+length-1 >= Memory.DATA_SIZE || start <= arg + 2 || start + length -1 <= arg) {
+                throw new IllegalArgumentException("Illegal Argument(s) for 'ROT' instruction.");
+            }
+            if(move == 0) {
+                return;
+            }
+            else if(move > 0) {
+                setAccumulator(memory.getData(start));
+                for(int i=0;i<length - 1;i++) {
+                    int prev = memory.getData(start + i + 1);
+                    memory.setData(start + i + 1, getAccumulator());
+                    setAccumulator(prev);
                 }
-                setData(start+length+move, cpu.accumulator);
-            }else if (move>0){
-                cpu.accumulator = getData(start+length-1);
-                for (int k = length -1; k>0; k--){
-                    setData(start+length+move-k, getData(start+(k + move + length)%length));
-                }
-                setData(start, cpu.accumulator);
-            }else{
-                //do nothing
+                memory.setData(start, getAccumulator());
+                memory.setData(arg + 2, move - 1); //Woah dude, recursion.
+                INSTRUCTION_MAP.get(0x14).execute(arg, level);
+            }
+            else {
+                //Move is negative, but circles are circles.
+                memory.setData(arg + 2, length + move);
+                INSTRUCTION_MAP.get(0x14).execute(arg, level);
             }
         });
     }

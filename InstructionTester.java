@@ -839,15 +839,23 @@ public class InstructionTester {
     @Test
     public void testROT(){
         machine.clearMemory();
-        machine.setData(0x14, 0x20);
-        machine.setData(0x15, 3);
-        machine.setData(0x16, 4);
-        for(int i = 0x20; i < 0x20 + 2;i++) {
-            machine.setData(i, 21);
-        }
-        System.out.println(Arrays.toString(machine.getData()));
         Instruction instr = machine.get(0x14);
-        instr.execute(0x14,1);
-        System.out.println(Arrays.toString(machine.getData()));
+        for(int i = 0x20; i < 0x2A; i++)
+            machine.setData(i, (i - 0x1F) * 2);//first 10 even numbers excl. 0
+        machine.setData(0x10, 0x20);
+        machine.setData(0x11, 0xA);
+        machine.setData(0x12, 0x2);
+        instr.execute(0x10, 1);
+        int[] a = Arrays.copyOfRange(machine.getData(), 0x20, 0x2A);
+        assertArrayEquals(new int[] {18, 20, 2, 4, 6, 8, 10, 12, 14, 16}, a);
+        machine.clearMemory();
+        machine.setData(0x10, 0x20);
+        machine.setData(0x11, 0x5);
+        machine.setData(0x12, -2);
+        for(int i=0x20;i < 0x25;i++)
+            machine.setData(i, i - 0x1F);
+        instr.execute(0x10, 1);
+        int[] c = Arrays.copyOfRange(machine.getData(), 0x20, 0x25);
+        assertArrayEquals(new int[] {3, 4, 5, 1, 2}, c);
     }
 }
