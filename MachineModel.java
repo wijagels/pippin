@@ -250,6 +250,16 @@ public class MachineModel extends Observable{
         });
 
         //INSTRUCTION_MAP entry for "ROT"
+        /**
+         * @param arg The starting memory location
+         * @param level The indirection level
+         * Rotates a group of memory locations.
+         * Data at arg is the starting index of the memory, which must be at least 3 more than arg.  Must be positive and non-zero.
+         * Data at arg + 1 is the length from the start position to use for the rotation.  Start + length must not exceed the memory size.  Must be positive and non-zero.
+         * Data at arg + 2 is the amount to be rotated by, with positive numbers being a right-shift and negatives a left-shift.
+         * @throws IllegalArgumentException if the three memory location's data are invalid.
+         * This works like a regular shift, but when data reaches the end or beginning of the area, it wraps around.
+         */
         INSTRUCTION_MAP.put(0x14,(arg, level) -> {
             if(level != 1)
                 throw new IllegalArgumentException("Illegal indirection level in ROT instruction");
