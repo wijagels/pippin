@@ -12,6 +12,7 @@ public class MachineModel extends Observable{
     private Memory memory = new Memory();
     private boolean withGUI;
     private Code code;
+    private boolean running = false;
 
     public MachineModel() {
         this(false);
@@ -48,12 +49,17 @@ public class MachineModel extends Observable{
     public int getAccumulator() {
         return cpu.accumulator;
     }
+    public boolean isRunning() {
+        return this.running;
+    }
     public void setAccumulator(int i) {
         cpu.accumulator = i;
     }
-
     public void setProgramCounter(int i) {
         cpu.programCounter = i;
+    }
+    public void setRunning(boolean running) {
+        this.running = running;
     }
 
     public int getChangedIndex() {
@@ -61,17 +67,24 @@ public class MachineModel extends Observable{
     }
 
     public void step() {
-        //TODO implement
+        int pc = cpu.programCounter;
+        int opcode = code.getOp(pc);
+        int arg = code.getArg(pc);
+        int indirectionLevel = code.getIndirectionLevel(pc);
+        INSTRUCTION_MAP.get(opcode).execute(arg, indirectionLevel);
     }
 
     public void clear() {
-        //TODO implement
+        if(code != null)
+            code.clear();
+        memory.clear();
+        cpu.programCounter = 0;
     }
 
 
     public void halt() {
         if(withGUI) {
-            // the code needed here will come later
+            running = false;
         } else {
             System.exit(0);
         }
@@ -170,6 +183,8 @@ public class MachineModel extends Observable{
                 throw new IllegalArgumentException(
                         "Illegal indirection level in DIV instruction");
             }
+            if(arg == 0)
+                throw new DivideByZeroException("Division by Zero");
             if (level > 0) {
                 INSTRUCTION_MAP.get(0x6).execute(memory.getData(arg), level-1);
             } else {

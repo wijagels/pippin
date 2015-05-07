@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 
 public class Loader {
     public static void load(MachineModel model, Code code, File file) throws FileNotFoundException {
+        if(model == null || code == null || file == null) return;
         try (Scanner input = new Scanner(file)) {
             boolean incode = true;
             while(input.hasNextLine()) {

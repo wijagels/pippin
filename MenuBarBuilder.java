@@ -41,7 +41,6 @@ public class MenuBarBuilder implements Observer {
                     KeyEvent.VK_E, ActionEvent.CTRL_MASK));
         exit.addActionListener(e -> machineView.exit());
         returnMenu.add(exit);
-
         return returnMenu;
     }
 

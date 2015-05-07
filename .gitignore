@@ -12,6 +12,7 @@ package-list
 #*
 *#
 .DS_STORE
+propertyfile.txt
 
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm
 
