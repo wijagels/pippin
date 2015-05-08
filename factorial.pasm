@@ -11,5 +11,4 @@ MUL [1
 JUMP 1
 HALT
 DATA
-0
-8
+0 8

@@ -27,11 +27,22 @@ public class Assembler {
 
     static {
         noArgument.add("HALT");
-        // two more lines needed
+        noArgument.add("NOP");
+        noArgument.add("NOT");
         allowsImmediate.add("LOD");
-        // seven more lines needed
+        allowsImmediate.add("STO");
+        allowsImmediate.add("ADD");
+        allowsImmediate.add("SUB");
+        allowsImmediate.add("MUL");
+        allowsImmediate.add("DIV");
+        allowsImmediate.add("JUMP");
+        allowsImmediate.add("JMPZ");
         allowsIndirect.add("LOD");
-        // five more lines needed
+        allowsIndirect.add("STO");
+        allowsIndirect.add("ADD");
+        allowsIndirect.add("SUB");
+        allowsIndirect.add("MUL");
+        allowsIndirect.add("DIV");
     }
 
     /**
@@ -54,7 +65,6 @@ public class Assembler {
 
         try (Scanner inp = new Scanner(input)){
             int i=0;
-//System.out.println(inp); 
             while(inp.hasNextLine()){
                 inputText.add(inp.nextLine());
                 if (inputText.get(i).trim().length() > 0){ //if nonblank line
@@ -66,11 +76,8 @@ public class Assembler {
             }
         }catch (FileNotFoundException e){
             errors.put(0, "Error: Unable to open the input file");
-//System.out.println("can't open");        
 	}
-//for (String x: inputText){
-//	System.out.println(x);
-//}
+
         int blankLnNum = -1;
 
         for(int i=0; i<inputText.size(); i++){
@@ -95,7 +102,7 @@ public class Assembler {
                 if (!(inputText.get(i).equals("DATA"))){
                     errors.put(i, "Error on line " + i + ": 'DATA' is not all uppercase.");
                 }
-		pushTo = "inData";
+		        pushTo = "inData";
                 // but dont add it to either arraylist
             }else{
                 inData.add(inputText.get(i).trim());
@@ -117,24 +124,24 @@ public class Assembler {
                     if (!(noArgument.contains(parts[0])) && parts.length > 2){
                         errors.put(i+1, "Error on line " + (i+1) + ": mnemonic has too many arguments.");
                     } else {
-                        if (parts[1].length()>=3 && parts[1].substring(0).equals('[') && parts[1].substring(1).equals('[')){
+                        if (parts[1].length()>=3 && parts[1].charAt(0) == '[' && parts[1].charAt(1) == '[' ){
                             try{
                                 int arg = Integer.parseInt(parts[1].substring(2),16);
                                 outCode.add(Integer.toString(InstructionMap.opcode.get(parts[0]), 16) + " " + Integer.toString(arg, 16).toUpperCase() + " 2");
                             }catch(NumberFormatException e){
                                 errors.put(i+1, "Error on line "+(i+1)+ ": indirect argument is not a hex number.");
                             }
-                        }else if (parts[1].length()>=2 && parts[1].substring(0).equals('[')){
+                        }else if (parts[1].length()>=2 && parts[1].charAt(0) == '[' ){
                             try{
                                 int arg = Integer.parseInt(parts[1].substring(1),16);
                                 outCode.add(Integer.toString(InstructionMap.opcode.get(parts[0]), 16) + " " + Integer.toString(arg, 16).toUpperCase() + " 1");
                             }catch(NumberFormatException e){
                                 errors.put(i+1, "Error on line "+(i+1)+ ": direct argument is not a hex number.");
                             }
-                        }else if (parts[1].length()>=1 && !(parts[1].substring(0).equals('['))){
+                        }else if (parts[1].length()>=1 && !(parts[1].charAt(0) == '[' )){
                             if (allowsImmediate.contains(parts[0])){
                                 try{
-                                    int arg = Integer.parseInt(parts[1].substring(2),16);
+                                    int arg = Integer.parseInt(parts[1].substring(0),16);
                                     outCode.add(Integer.toString(InstructionMap.opcode.get(parts[0]), 16) + " " + Integer.toString(arg, 16).toUpperCase() + " 0");
                                 }catch(NumberFormatException e){
                                     errors.put(i+1, "Error on line "+(i+1)+ ": immediate argument is not a hex number.");
@@ -149,10 +156,6 @@ public class Assembler {
                 errors.put(i+1, "Error on line " + (i+1) + ": mnemonics must be in uppercase.");
             }
         }
-
-for (String x: outCode){
-	System.out.println(x);
-}
 
         int offset = inCode.size()+1;
 
@@ -182,7 +185,8 @@ for (String x: outCode){
         if(errors.size() == 0) {
             try (PrintWriter outp = new PrintWriter(output)){
                 for(String str : outCode) outp.println(str);
-                outp.println(-1); // the separator where the source has “DATA” for(String str : outData) outp.println(str);
+                outp.println(-1); // the separator where the source has “DATA” 
+                for(String str : outData) outp.println(str);
             }catch (FileNotFoundException e){
                 errors.put(0, "Error: Unable to write the assembled program to the output file");
             }
