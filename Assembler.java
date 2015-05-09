@@ -31,6 +31,7 @@ public class Assembler {
         noArgument.add("NOT");
         allowsImmediate.add("LOD");
         allowsImmediate.add("STO");
+        allowsImmediate.add("AND");
         allowsImmediate.add("ADD");
         allowsImmediate.add("SUB");
         allowsImmediate.add("MUL");
@@ -76,7 +77,7 @@ public class Assembler {
             }
         }catch (FileNotFoundException e){
             errors.put(0, "Error: Unable to open the input file");
-	}
+        }
 
         int blankLnNum = -1;
 
@@ -102,7 +103,7 @@ public class Assembler {
                 if (!(inputText.get(i).equals("DATA"))){
                     errors.put(i, "Error on line " + i + ": 'DATA' is not all uppercase.");
                 }
-		        pushTo = "inData";
+                pushTo = "inData";
                 // but dont add it to either arraylist
             }else{
                 inData.add(inputText.get(i).trim());
@@ -185,7 +186,7 @@ public class Assembler {
         if(errors.size() == 0) {
             try (PrintWriter outp = new PrintWriter(output)){
                 for(String str : outCode) outp.println(str);
-                outp.println(-1); // the separator where the source has “DATA” 
+                outp.println(-1); // the separator where the source has “DATA”
                 for(String str : outData) outp.println(str);
             }catch (FileNotFoundException e){
                 errors.put(0, "Error: Unable to write the assembled program to the output file");

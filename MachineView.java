@@ -211,33 +211,33 @@ public class MachineView extends Observable {
         setRunning(false);
     }
 
-	public void loadFile() {
-		JFileChooser chooser = new JFileChooser(executableDir);
-		FileNameExtensionFilter filter = new FileNameExtensionFilter(
-				"Pippin Executable Files", "pexe");
-		chooser.setFileFilter(filter);
-		// CODE TO LOAD DESIRED FILE
-		int openOK = chooser.showOpenDialog(null);
-		if(openOK == JFileChooser.APPROVE_OPTION) {
-			currentlyExecutingFile = chooser.getSelectedFile();
-		}
-		if(currentlyExecutingFile != null && currentlyExecutingFile.exists()) {
-			// CODE TO REMEMBER WHICH DIRECTORY HAS THE pexe FILES
-			executableDir = currentlyExecutingFile .getAbsolutePath();
-			executableDir = executableDir.replace('\\','/');
-			int lastSlash = executableDir.lastIndexOf('/');
-			executableDir = executableDir.substring(0, lastSlash + 1);
-			try {
-				properties.setProperty("SourceDirectory", sourceDir);
-				properties.setProperty("ExecutableDirectory", executableDir);
-				properties.store(new FileOutputStream("propertyfile.txt"),
-						"File locations");
-			} catch (Exception e) {
-				System.out.println("Error writing properties file");
-			}
-		}
-		finalLoad_ReloadStep();
-	}
+    public void loadFile() {
+        JFileChooser chooser = new JFileChooser(executableDir);
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "Pippin Executable Files", "pexe");
+        chooser.setFileFilter(filter);
+        // CODE TO LOAD DESIRED FILE
+        int openOK = chooser.showOpenDialog(null);
+        if(openOK == JFileChooser.APPROVE_OPTION) {
+            currentlyExecutingFile = chooser.getSelectedFile();
+        }
+        if(currentlyExecutingFile != null && currentlyExecutingFile.exists()) {
+            // CODE TO REMEMBER WHICH DIRECTORY HAS THE pexe FILES
+            executableDir = currentlyExecutingFile .getAbsolutePath();
+            executableDir = executableDir.replace('\\','/');
+            int lastSlash = executableDir.lastIndexOf('/');
+            executableDir = executableDir.substring(0, lastSlash + 1);
+            try {
+                properties.setProperty("SourceDirectory", sourceDir);
+                properties.setProperty("ExecutableDirectory", executableDir);
+                properties.store(new FileOutputStream("propertyfile.txt"),
+                        "File locations");
+            } catch (Exception e) {
+                System.out.println("Error writing properties file");
+            }
+        }
+        finalLoad_ReloadStep();
+    }
 
     public void finalLoad_ReloadStep() {
         Code code = new Code();
