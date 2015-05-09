@@ -96,6 +96,7 @@ public class MachineView extends Observable {
                         + "Exception message: " + e.getMessage(),
                         "Run time error",
                         JOptionPane.OK_OPTION);
+                halt();
             }
             catch (ArrayIndexOutOfBoundsException e) {
                 JOptionPane.showMessageDialog(
@@ -104,6 +105,7 @@ public class MachineView extends Observable {
                         + "Exception message: " + e.getMessage(),
                         "Run time error",
                         JOptionPane.OK_OPTION);
+                halt();
             }
             catch (IndexOutOfBoundsException e) {
                 JOptionPane.showMessageDialog(
@@ -112,6 +114,7 @@ public class MachineView extends Observable {
                         + "Exception message: " + e.getMessage(),
                         "Run time error",
                         JOptionPane.OK_OPTION);
+                halt();
             }
             catch (NullPointerException e) {
                 JOptionPane.showMessageDialog(
@@ -120,6 +123,7 @@ public class MachineView extends Observable {
                         + "Exception message: " + e.getMessage(),
                         "Run time error",
                         JOptionPane.OK_OPTION);
+                halt();
             }
             catch (DivideByZeroException e) {
                 JOptionPane.showMessageDialog(
@@ -128,6 +132,7 @@ public class MachineView extends Observable {
                         + "Exception message: " + e.getMessage(),
                         "Run time error",
                         JOptionPane.OK_OPTION);
+                halt();
             }
             setChanged();
             notifyObservers();
@@ -156,49 +161,7 @@ public class MachineView extends Observable {
     public void execute() {
         while(running) {
             if(model.isRunning()) {
-                try {
-                    model.step();
-                }
-                catch (IllegalArgumentException e) {
-                    JOptionPane.showMessageDialog(
-                            frame,
-                            "Program error from line " + getProgramCounter() + "\n"
-                            + "Exception message: " + e.getMessage(),
-                            "Run time error",
-                            JOptionPane.OK_OPTION);
-                }
-                catch (ArrayIndexOutOfBoundsException e) {
-                    JOptionPane.showMessageDialog(
-                            frame,
-                            "Program error from line " + getProgramCounter() + "\n"
-                            + "Exception message: " + e.getMessage(),
-                            "Run time error",
-                            JOptionPane.OK_OPTION);
-                }
-                catch (IndexOutOfBoundsException e) {
-                    JOptionPane.showMessageDialog(
-                            frame,
-                            "Program error from line " + getProgramCounter() + "\n"
-                            + "Exception message: " + e.getMessage(),
-                            "Run time error",
-                            JOptionPane.OK_OPTION);
-                }
-                catch (NullPointerException e) {
-                    JOptionPane.showMessageDialog(
-                            frame,
-                            "Program error from line " + getProgramCounter() + "\n"
-                            + "Exception message: " + e.getMessage(),
-                            "Run time error",
-                            JOptionPane.OK_OPTION);
-                }
-                catch (DivideByZeroException e) {
-                    JOptionPane.showMessageDialog(
-                            frame,
-                            "Program error from line " + getProgramCounter() + "\n"
-                            + "Exception message: " + e.getMessage(),
-                            "Run time error",
-                            JOptionPane.OK_OPTION);
-                }
+                model.step();
             }
             else
                 halt();
