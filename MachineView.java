@@ -363,7 +363,7 @@ public class MachineView extends Observable {
         bar.add(menuBuilder.createExecuteMenu());
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(WindowListenerFactory.windowClosingFactory(e -> exit()));
         frame.addWindowListener(null); // needs work
         state = States.NOTHING_LOADED;
