@@ -97,10 +97,10 @@ public class Assembler {
         String pushTo = "inCode";
 
         for (int i=0; i<inputText.size(); i++){
-            if (!(inputText.get(i).equalsIgnoreCase("DATA")) && pushTo=="inCode"){
+            if (!(inputText.get(i).trim().equalsIgnoreCase("DATA")) && pushTo=="inCode"){
                 inCode.add(inputText.get(i).trim());
-            }else if (inputText.get(i).equalsIgnoreCase("DATA")){
-                if (!(inputText.get(i).equals("DATA"))){
+            }else if (inputText.get(i).trim().equalsIgnoreCase("DATA")){
+                if (!(inputText.get(i).trim().equals("DATA"))){
                     errors.put(i, "Error on line " + i + ": 'DATA' is not all uppercase.");
                 }
                 pushTo = "inData";
@@ -115,7 +115,7 @@ public class Assembler {
         for (int i=0; i<inCode.size(); i++){
             String[] parts = inCode.get(i).split("\\s+");
             if(!InstructionMap.opcode.containsKey(parts[0].toUpperCase())){
-                errors.put(i+1, "Error on line " + (i+1) + ": illegal mnemonic.");
+                errors.put(i+1, "Error on line " + (i+1) + ": illegal mnemonic. " + parts[0]);
             }else if (InstructionMap.opcode.containsKey(parts[0])){
                 if (noArgument.contains(parts[0]) && parts.length > 1){
                     errors.put(i+1, "Error on line " + (i+1) + ": mnemonic does not take arguments.");
