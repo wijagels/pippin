@@ -13,6 +13,7 @@ package-list
 *#
 .DS_STORE
 propertyfile.txt
+out.pexe
 
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm
 

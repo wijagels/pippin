@@ -20,6 +20,7 @@ public class InstructionMap {
         opcode.put("JUMP", 0xB);
         opcode.put("JMPZ", 0xC);
         opcode.put("HALT", 0xF);
+        opcode.put("ROT", 0x14);
 
         for(String str : opcode.keySet()) {
             mnemonics.put(opcode.get(str), str);

@@ -38,6 +38,7 @@ public class Assembler {
         allowsImmediate.add("DIV");
         allowsImmediate.add("JUMP");
         allowsImmediate.add("JMPZ");
+        allowsImmediate.add("ROT");
         allowsIndirect.add("LOD");
         allowsIndirect.add("STO");
         allowsIndirect.add("ADD");
@@ -65,14 +66,21 @@ public class Assembler {
         ArrayList<String> inputText = new ArrayList<>();
 
         try (Scanner inp = new Scanner(input)){
+            boolean isB = false;
             int i=0;
             while(inp.hasNextLine()){
-                inputText.add(inp.nextLine());
-                if (inputText.get(i).trim().length() > 0){ //if nonblank line
-                    if (inputText.get(i).charAt(0) == ' ' || inputText.get(i).charAt(0) == '\t'){
+                String text = inp.nextLine();
+                if (text.trim().length() > 0){ //if nonblank line
+                    if (text.charAt(0) == ' ' || text.charAt(0) == '\t'){
                         errors.put(i+1, "Error on line " + (i+1) + ": starts with white space");
                     }
+                    if(isB)
+                        errors.put(i+1, "Error on line " + (i+1) + ": contents after blank line");
+                    else
+                        inputText.add(text);
                 }
+                else
+                    isB = true;
                 i++;
             }
         }catch (FileNotFoundException e){
@@ -125,7 +133,9 @@ public class Assembler {
                     if (!(noArgument.contains(parts[0])) && parts.length > 2){
                         errors.put(i+1, "Error on line " + (i+1) + ": mnemonic has too many arguments.");
                     } else {
-                        if (parts[1].length()>=3 && parts[1].charAt(0) == '[' && parts[1].charAt(1) == '[' ){
+                        if(parts.length <= 1)
+                            errors.put(i+1, "Error on line " + (i+1) + ": not enough arguments");
+                        else if (parts[1].length()>=3 && parts[1].charAt(0) == '[' && parts[1].charAt(1) == '[' ){
                             try{
                                 int arg = Integer.parseInt(parts[1].substring(2),16);
                                 outCode.add(Integer.toString(InstructionMap.opcode.get(parts[0]), 16) + " " + Integer.toString(arg, 16).toUpperCase() + " 2");
@@ -163,7 +173,7 @@ public class Assembler {
         ArrayList<String> outData = new ArrayList<>();
 
         for (int i=0; i<inData.size(); i++){
-            String[] parts = inData.get(i).split("\\s+");
+            String[] parts = inData.get(i).trim().split("\\s+");
             if (parts.length!=2){
                 errors.put(i+offset, "Error on line "+(i+offset)+ ": this is not an address/value pair.");
             }else{
