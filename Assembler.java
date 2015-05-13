@@ -192,8 +192,8 @@ public class Assembler {
                 }catch(NumberFormatException e){
                     errors.put(i+offset+1, "Error on line "+(i+offset+1)+ ": value is not a hex number.");
                 }
-                if(addr < 0 || val < 0)
-                    errors.put(i+offset+1, "Error on line "+(i+offset+1)+ ": values cannot be negative.");
+                if(addr < 0)
+                    errors.put(i+offset+1, "Error on line "+(i+offset+1)+ ": memory location cannot be negative.");
                 outData.add(Integer.toString(addr, 16).toUpperCase() + " " + Integer.toString(val, 16).toUpperCase());
             }
         }
