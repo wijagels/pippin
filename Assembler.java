@@ -67,6 +67,7 @@ public class Assembler {
 
         try (Scanner inp = new Scanner(input)){
             boolean isB = false;
+            boolean blankRecorded = false;
             int i=0;
             while(inp.hasNextLine()){
                 String text = inp.nextLine();
@@ -74,10 +75,12 @@ public class Assembler {
                     if (text.charAt(0) == ' ' || text.charAt(0) == '\t'){
                         errors.put(i+1, "Error on line " + (i+1) + ": starts with white space");
                     }
-                    if(isB)
-                        errors.put(i+1, "Error on line " + (i+1) + ": contents after blank line");
-                    else
+                    if(isB && blankRecorded==false){
+                        errors.put(i, "Error on line " + (i) + ": blank line");
+                        blankRecorded = true;
+                    }else{
                         inputText.add(text);
+                    }
                 }
                 else
                     isB = true;
