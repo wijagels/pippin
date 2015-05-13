@@ -30,7 +30,7 @@ public class AssemblerTester{
                     System.out.println(f.getName());
                     Assembler.assemble(f, fileOut, errors);
                     System.out.println(errors);
-                    if(f.getName().contains("e.pasm") && f.getName() != "merge.pasm")
+                    if(f.getName().contains("e.pasm") && !f.getName().equals("merge.pasm"))
                         assertTrue(f.getName(), errors.size() != 0);
                     else
                         assertTrue(f.getName(), errors.size() == 0);
