@@ -69,6 +69,7 @@ public class Assembler {
             boolean isB = false;
             boolean blankRecorded = false;
             int i=0;
+            int blanks=0;
             while(inp.hasNextLine()){
                 String text = inp.nextLine();
                 if (text.trim().length() > 0){ //if nonblank line
@@ -76,14 +77,16 @@ public class Assembler {
                         errors.put(i+1, "Error on line " + (i+1) + ": starts with white space");
                     }
                     if(isB && blankRecorded==false){
-                        errors.put(i, "Error on line " + (i) + ": blank line");
+                        errors.put(i+1-blanks, "Error on line " + (i+1-blanks) + ": blank line");
                         blankRecorded = true;
                     }else{
                         inputText.add(text);
                     }
                 }
-                else
+                else{
                     isB = true;
+                    blanks++;
+                }
                 i++;
             }
         }catch (FileNotFoundException e){
