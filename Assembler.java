@@ -178,20 +178,22 @@ public class Assembler {
         for (int i=0; i<inData.size(); i++){
             String[] parts = inData.get(i).trim().split("\\s+");
             if (parts.length!=2){
-                errors.put(i+offset, "Error on line "+(i+offset)+ ": this is not an address/value pair.");
+                errors.put(i+offset+1, "Error on line "+(i+offset+1)+ ": this is not an address/value pair.");
             }else{
                 int addr = -1;
                 int val = -1;
                 try{
                     addr = Integer.parseInt(parts[0],16);
                 }catch(NumberFormatException e){
-                    errors.put(i+offset, "Error on line "+(i+offset)+ ": address is not a hex number.");
+                    errors.put(i+offset+1, "Error on line "+(i+offset+1)+ ": address is not a hex number.");
                 }
                 try{
                     val = Integer.parseInt(parts[1],16);
                 }catch(NumberFormatException e){
-                    errors.put(i+offset, "Error on line "+(i+offset)+ ": value is not a hex number.");
+                    errors.put(i+offset+1, "Error on line "+(i+offset+1)+ ": value is not a hex number.");
                 }
+                if(addr < 0 || val < 0)
+                    errors.put(i+offset+1, "Error on line "+(i+offset+1)+ ": values cannot be negative.");
                 outData.add(Integer.toString(addr, 16).toUpperCase() + " " + Integer.toString(val, 16).toUpperCase());
             }
         }
